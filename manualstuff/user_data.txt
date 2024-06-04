@@ -1,0 +1,13 @@
+#!/bin/bash
+sudo su
+yum update -y
+yum install -y httpd
+systemctl start httpd
+systemctl enable httpd
+echo "<html><body><h1>Hello World from $(hostname -f)</h1>CLI-created server</body></html>" > /var/www/html/index.html
+
+
+aws ec2 run-instances --image-id ami-044e3aa24b5759e2e  \
+ --count 1 --instance-type t3.micro --key-name first-web-server-key-pair \
+ --security-group-ids sg-09405cf3d695aacbe --subnet-id subnet-060fd926cd4df7b3c \
+ --user-data file:///home/cloudshell-user/user_data.txt
